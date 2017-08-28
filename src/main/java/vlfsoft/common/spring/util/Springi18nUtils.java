@@ -4,20 +4,19 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
-import vlfsoft.common.annotations.design.patterns.etc.EtcShorthandPattern;
+import vlfsoft.common.annotations.design.patterns.StructuralPattern;
 import vlfsoft.common.util.ClassUtils;
 
 final public class Springi18nUtils {
 
     public static class MessageNotFoundException extends RuntimeException {
-        public MessageNotFoundException(String s) {
+        MessageNotFoundException(String s) {
             super(s);
         }
     }
@@ -25,7 +24,7 @@ final public class Springi18nUtils {
     private Springi18nUtils() {
     }
 
-    @EtcShorthandPattern
+    @StructuralPattern.EtcShorthandPattern
     public static Optional<String> getMessage(final @Nonnull MessageSource aMessageSource, @Nonnull String aKey) {
         try {
             return Optional.of(aMessageSource.getMessage(aKey, null, LocaleContextHolder.getLocale()));
@@ -34,7 +33,7 @@ final public class Springi18nUtils {
         }
     }
 
-    @EtcShorthandPattern
+    @StructuralPattern.EtcShorthandPattern
     public static String getMessageOrElseThrow(final @Nonnull MessageSource aMessageSource, @Nonnull String aKey)
             throws MessageNotFoundException {
         return getMessage(aMessageSource, aKey)
@@ -42,7 +41,7 @@ final public class Springi18nUtils {
                 .orElseThrow(() -> new MessageNotFoundException(String.format(Locale.getDefault(), "aKey = '%s'", aKey)));
     }
 
-    @EtcShorthandPattern
+    @StructuralPattern.EtcShorthandPattern
     public static String getMessageOrElse(final @Nonnull MessageSource aMessageSource, @Nonnull String aKey, @Nonnull String aDefaultValue) {
         return getMessage(aMessageSource, aKey)
                 //.orElseThrow(IllegalStateException::new);
@@ -55,11 +54,11 @@ final public class Springi18nUtils {
         return getMessageOrElseThrow(aMessageSource, ClassUtils.getNestedClassName(aEnumType.getClass()) + "." + aEnumType.name());
     }
 
-    public static <E extends Enum> Optional<E> getEnumOptional(@Nonnull String aTitle, final @Nonnull MessageSource aMessageSource,
+    private static <E extends Enum> Optional<E> getEnumOptional(@Nonnull String aTitle, final @Nonnull MessageSource aMessageSource,
                                                                @Nonnull String aNameSpace, final @Nonnull E aEnumType) {
 
         // Optional.empty() or ТВ, ...
-        Optional<String> enumStringValueOptional = Springi18nUtils.getMessage(aMessageSource, aNameSpace + "." + aEnumType.name());
+        Optional<String> enumStringValueOptional = getMessage(aMessageSource, aNameSpace + "." + aEnumType.name());
 
         return (enumStringValueOptional.isPresent() && aTitle.equals(enumStringValueOptional.get())
                 ? Optional.of(aEnumType)
@@ -67,7 +66,7 @@ final public class Springi18nUtils {
         );
     }
 
-    public static <E extends Enum> Optional<E> getEnumOptional(@Nonnull String aTitle, final @Nonnull MessageSource aMessageSource,
+    private static <E extends Enum> Optional<E> getEnumOptional(@Nonnull String aTitle, final @Nonnull MessageSource aMessageSource,
                                                                final @Nonnull E aEnumType) {
         return getEnumOptional(aTitle, aMessageSource,
                 ClassUtils.getNestedClassName(aEnumType.getClass()),
