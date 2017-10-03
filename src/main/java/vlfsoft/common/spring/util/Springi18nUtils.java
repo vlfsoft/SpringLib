@@ -24,7 +24,7 @@ final public class Springi18nUtils {
     private Springi18nUtils() {
     }
 
-    @StructuralPattern.EtcShorthandPattern
+    @StructuralPattern.ShorthandPattern
     public static Optional<String> getMessage(final @Nonnull MessageSource aMessageSource, @Nonnull String aKey) {
         try {
             return Optional.of(aMessageSource.getMessage(aKey, null, LocaleContextHolder.getLocale()));
@@ -33,7 +33,7 @@ final public class Springi18nUtils {
         }
     }
 
-    @StructuralPattern.EtcShorthandPattern
+    @StructuralPattern.ShorthandPattern
     public static String getMessageOrElseThrow(final @Nonnull MessageSource aMessageSource, @Nonnull String aKey)
             throws MessageNotFoundException {
         return getMessage(aMessageSource, aKey)
@@ -41,7 +41,7 @@ final public class Springi18nUtils {
                 .orElseThrow(() -> new MessageNotFoundException(String.format(Locale.getDefault(), "aKey = '%s'", aKey)));
     }
 
-    @StructuralPattern.EtcShorthandPattern
+    @StructuralPattern.ShorthandPattern
     public static String getMessageOrElse(final @Nonnull MessageSource aMessageSource, @Nonnull String aKey, @Nonnull String aDefaultValue) {
         return getMessage(aMessageSource, aKey)
                 //.orElseThrow(IllegalStateException::new);
