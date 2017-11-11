@@ -1,6 +1,6 @@
 package vlfsoft.common.spring.util
 
-import vlfsoft.common.annotations.design.patterns.CreationalPattern
+import vlfsoft.patterns.CreationalPattern
 
 @CreationalPattern.UtilityClass
 object SpringProfileNames {

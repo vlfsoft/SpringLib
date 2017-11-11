@@ -1,11 +1,10 @@
 package vlfsoft.common.spring.controller;
 
 import org.slf4j.Logger;
-import vlfsoft.common.annotations.design.patterns.StructuralPattern;
+import vlfsoft.patterns.StructuralPattern;
 import vlfsoft.common.exceptions.AppException;
 
-import javax.annotation.Nonnull;
-import java.lang.annotation.*;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 /**
@@ -16,26 +15,27 @@ final public class RestApiProcessor {
     private RestApiProcessor() {
     }
 
-    public static <RB extends RestApiProcessor.ResponseBodyAdapterA> RB process(final @Nonnull Logger log,
-                                                                                final @Nonnull RB aResponseBody,
-                                                                                final @Nonnull Consumer<RB> aProcessorFunction,
-                                                                                final @Nonnull AppException.ErrorCodeAdapterA aErrorCode
+    public static <RB extends RestApiProcessor.ResponseBodyAdapterA> RB process(final @NotNull Logger log,
+                                                                                final @NotNull RB aResponseBody,
+                                                                                final @NotNull Consumer<RB> aProcessorFunction,
+                                                                                final @NotNull AppException.ErrorCodeAdapterA aErrorCode
     ) {
         return process(log, aResponseBody, aProcessorFunction, aErrorCode, RestApiProcessor::defaultCatchFunction);
     }
 
-    public static <RB extends RestApiProcessor.ResponseBodyAdapterA> RB process(final @Nonnull Logger log,
-                                                                                final @Nonnull RB aResponseBody,
-                                                                                final @Nonnull Consumer<RB> aProcessorFunction,
-                                                                                final @Nonnull AppException.ErrorCodeAdapterA aErrorCode,
-                                                                                final @Nonnull CatchFuncInterface<RB> aCatchFunction
+    public static <RB extends RestApiProcessor.ResponseBodyAdapterA> RB process(final @NotNull Logger log,
+                                                                                final @NotNull RB aResponseBody,
+                                                                                final @NotNull Consumer<RB> aProcessorFunction,
+                                                                                final @NotNull AppException.ErrorCodeAdapterA aErrorCode,
+                                                                                final @NotNull CatchFuncInterface<RB> aCatchFunction
     ) {
         try {
             try {
                 // return aProcessor.process(log);
                 aProcessorFunction.accept(aResponseBody);
             } catch (Throwable e) {
-                AppException.propagate(aErrorCode, e);
+                throw AppException.getExceptionToPropagate(aErrorCode, e);
+                // AppException.propagate(aErrorCode, e);
                 // dummy code - never runs, since AppException.propagate will always route code flow to outer catch.
             }
         } catch (AppException e) {
@@ -46,8 +46,8 @@ final public class RestApiProcessor {
         return aResponseBody;
     }
 
-    public static <RB extends RestApiProcessor.ResponseBodyAdapterA> RB defaultCatchFunction(final @Nonnull Logger log,
-                                                                                             final @Nonnull RB aResponseBody,
+    public static <RB extends RestApiProcessor.ResponseBodyAdapterA> RB defaultCatchFunction(final @NotNull Logger log,
+                                                                                             final @NotNull RB aResponseBody,
                                                                                              AppException e) {
         log.error(e.getMessage());
         // PRB: Unchecked
@@ -59,45 +59,45 @@ final public class RestApiProcessor {
 
     @FunctionalInterface
     public interface CatchFuncInterface<RB extends ResponseBodyAdapterA> {
-        void accept(final @Nonnull Logger log,
-                    final @Nonnull RB aResponseBody,
+        void accept(final @NotNull Logger log,
+                    final @NotNull RB aResponseBody,
                     AppException e) throws RuntimeException;
     }
 
 /*
     @FunctionalInterface
     public interface ProcessFuncInterface<RB extends ResponseBodyAdapterA> {
-        RB process(@Nonnull Logger log) throws RuntimeException;
+        RB process(@NotNull Logger log) throws RuntimeException;
     }
 */
 
     @StructuralPattern.Adapter
     public interface RequestAppCodeAdapterA {
 
-        @Nonnull String getAppCode();
-        void setAppCode(final @Nonnull String aAppCode);
+        @NotNull String getAppCode();
+        void setAppCode(final @NotNull String aAppCode);
 
-        default public void logAppCode(final @Nonnull Logger log) {
+        default public void logAppCode(final @NotNull Logger log) {
             log.info("aRequestBody.appCode : {}", getAppCode());
         }
 
     }
 
     public static abstract class GenericRequestAppCodeAdapter implements RequestAppCodeAdapterA {
-        private @Nonnull String mAppCode;
+        private @NotNull String mAppCode;
 
-        public GenericRequestAppCodeAdapter(final @Nonnull String aAppCode) {
+        public GenericRequestAppCodeAdapter(final @NotNull String aAppCode) {
             this.mAppCode = aAppCode;
         }
 
-        @Nonnull
+        @NotNull
         @Override
         public String getAppCode() {
             return mAppCode;
         }
 
         @Override
-        public void setAppCode(final @Nonnull String aAppCode) {
+        public void setAppCode(final @NotNull String aAppCode) {
             this.mAppCode = aAppCode;
         }
     }
@@ -105,21 +105,21 @@ final public class RestApiProcessor {
     @StructuralPattern.Adapter
     public interface ResponseBodyAdapterA<AppErrorCode extends AppException.ErrorCodeAdapterA> {
 
-        @Nonnull
+        @NotNull
         AppErrorCode getErrorCode();
 
-        void setErrorCode(final @Nonnull AppErrorCode aErrorCode);
+        void setErrorCode(final @NotNull AppErrorCode aErrorCode);
 
     }
 
     public static abstract class GenericResponseBodyAdapter<AppErrorCode extends AppException.ErrorCodeAdapterA> implements RestApiProcessor.ResponseBodyAdapterA<AppErrorCode> {
 
-        // private @Nonnull AppException.ErrorCodeAdapterA mErrorCode;
+        // private @NotNull AppException.ErrorCodeAdapterA mErrorCode;
         // PRB: JSON parse error: Can not construct instance of vlfsoft.common.exceptions.AppException$ErrorCodeAdapterA:
         // WO:
-        private @Nonnull AppErrorCode mErrorCode;
+        private @NotNull AppErrorCode mErrorCode;
 
-        @Nonnull
+        @NotNull
         @Override
         public AppErrorCode getErrorCode() {
              return mErrorCode;
@@ -127,25 +127,25 @@ final public class RestApiProcessor {
 
 
         @Override
-        public void setErrorCode(final @Nonnull AppErrorCode aErrorCode) {
+        public void setErrorCode(final @NotNull AppErrorCode aErrorCode) {
             mErrorCode = aErrorCode;
         }
 
-        public GenericResponseBodyAdapter(final @Nonnull AppErrorCode mErrorCode) {
+        public GenericResponseBodyAdapter(final @NotNull AppErrorCode mErrorCode) {
             this.mErrorCode = mErrorCode;
         }
     }
 
 
-    public static void logStarted(final @Nonnull Logger log, final @Nonnull String aRestApiName) {
+    public static void logStarted(final @NotNull Logger log, final @NotNull String aRestApiName) {
         log.info("{} started", aRestApiName);
     }
 
-    public static void logProcessingStarted(final @Nonnull Logger log, final @Nonnull String aRestApiName) {
+    public static void logProcessingStarted(final @NotNull Logger log, final @NotNull String aRestApiName) {
         log.info("{} processing started", aRestApiName);
     }
 
-    public static void logProcessingFinished(final @Nonnull Logger log, final @Nonnull String aRestApiName) {
+    public static void logProcessingFinished(final @NotNull Logger log, final @NotNull String aRestApiName) {
         log.info("{} processing finished", aRestApiName);
     }
 
