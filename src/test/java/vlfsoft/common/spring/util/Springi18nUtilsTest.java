@@ -2,7 +2,7 @@ package vlfsoft.common.spring.util;
 
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class Springi18nUtilsTest {
 
@@ -18,7 +18,7 @@ public class Springi18nUtilsTest {
 
     }
 
-    private static <E extends Enum> String getNestedClassName(final @Nonnull E aEnumType) {
+    private static <E extends Enum> String getNestedClassName(final @NotNull E aEnumType) {
         Class clazz = aEnumType.getClass();
         Class enclosingClazz = clazz.getEnclosingClass();
         String nestedClassName = (enclosingClazz != null ? enclosingClazz.getSimpleName() + "." : "") + clazz.getSimpleName();
@@ -27,7 +27,7 @@ public class Springi18nUtilsTest {
         return nestedClassName;
     }
 
-    private static String getNestedClassNameR(final @Nonnull Class aClass) {
+    private static String getNestedClassNameR(final @NotNull Class aClass) {
         Class enclosingClass = aClass.getEnclosingClass();
         return enclosingClass == null ? aClass.getSimpleName() : getNestedClassNameR(enclosingClass) + "." + aClass.getSimpleName();
     }

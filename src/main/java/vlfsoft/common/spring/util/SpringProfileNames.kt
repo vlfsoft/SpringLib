@@ -1,8 +1,8 @@
 package vlfsoft.common.spring.util
 
-import vlfsoft.patterns.CreationalPattern
+import vlfsoft.patterns.Pattern
 
-@CreationalPattern.UtilityClass
+@Pattern.UtilityClass
 object SpringProfileNames {
 
     const val PROD = "Prod"

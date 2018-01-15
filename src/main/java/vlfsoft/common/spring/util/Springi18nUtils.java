@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 
-import vlfsoft.patterns.StructuralPattern;
+import vlfsoft.patterns.Pattern;
 import vlfsoft.common.util.ClassUtils;
 
 final public class Springi18nUtils {
@@ -24,7 +24,7 @@ final public class Springi18nUtils {
     private Springi18nUtils() {
     }
 
-    @StructuralPattern.ShorthandPattern
+    @Pattern.ShorthandPattern
     public static Optional<String> getMessage(final @NotNull MessageSource aMessageSource, @NotNull String aKey) {
         try {
             return Optional.of(aMessageSource.getMessage(aKey, null, LocaleContextHolder.getLocale()));
@@ -33,7 +33,7 @@ final public class Springi18nUtils {
         }
     }
 
-    @StructuralPattern.ShorthandPattern
+    @Pattern.ShorthandPattern
     public static String getMessageOrElseThrow(final @NotNull MessageSource aMessageSource, @NotNull String aKey)
             throws MessageNotFoundException {
         return getMessage(aMessageSource, aKey)
@@ -41,7 +41,7 @@ final public class Springi18nUtils {
                 .orElseThrow(() -> new MessageNotFoundException(String.format(Locale.getDefault(), "aKey = '%s'", aKey)));
     }
 
-    @StructuralPattern.ShorthandPattern
+    @Pattern.ShorthandPattern
     public static String getMessageOrElse(final @NotNull MessageSource aMessageSource, @NotNull String aKey, @NotNull String aDefaultValue) {
         return getMessage(aMessageSource, aKey)
                 //.orElseThrow(IllegalStateException::new);

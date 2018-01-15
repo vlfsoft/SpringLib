@@ -1,15 +1,14 @@
 package vlfsoft.common.spring.taskexecutor;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.springframework.core.task.TaskExecutor;
 import vlfsoft.patterns.ConcurrencyPattern;
-import vlfsoft.patterns.CreationalPattern;
+import vlfsoft.patterns.GOF;
 
 import java.util.function.Consumer;
 
 @ConcurrencyPattern.ProducerConsumer.Queue.Container.Implementation
-@CreationalPattern.Singleton
+@GOF.Singleton
 public class TaskWithDtoExecutor<DTO> implements TaskWithDtoExecutorA<DTO> {
 
     private final @NotNull TaskExecutor mTaskExecutor;
@@ -19,7 +18,7 @@ public class TaskWithDtoExecutor<DTO> implements TaskWithDtoExecutorA<DTO> {
         mTaskExecutor = aTaskExecutor;
     }
 
-    @CreationalPattern.Factory.StaticFactoryMethod
+    @GOF.Factory.StaticFactoryMethod
     public static <DTO> TaskWithDtoExecutorA<DTO> newInstance(final @NotNull TaskExecutor aTaskExecutor) {
         return new TaskWithDtoExecutor<>(aTaskExecutor);
     }
