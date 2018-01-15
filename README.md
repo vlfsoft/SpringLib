@@ -1,2 +1,2 @@
-# SpringLib
-SpringLib - classes supporting Spring applications development
+# springx.core
+springx.core - classes supporting Spring applications development
